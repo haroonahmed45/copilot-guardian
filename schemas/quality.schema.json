@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["verdict", "reasons", "risk_level", "slop_score", "suggested_adjustments"],
+  "properties": {
+    "verdict": {"type": "string", "enum": ["GO", "NO_GO"]},
+    "reasons": {"type": "array", "items": {"type": "string"}},
+    "risk_level": {"type": "string", "enum": ["low", "medium", "high"]},
+    "slop_score": {"type": "number", "minimum": 0, "maximum": 1},
+    "suggested_adjustments": {"type": "array", "items": {"type": "string"}}
+  }
+}

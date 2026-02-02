@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.copilot-guardian/
+.copilot-guardian-test/
+.test-output/
+.DS_Store
+*.log

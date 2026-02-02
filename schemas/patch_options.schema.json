@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["strategies"],
+  "properties": {
+    "strategies": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["label", "id", "risk_level", "summary", "diff"],
+        "properties": {
+          "label": {"type": "string"},
+          "id": {"type": "string"},
+          "risk_level": {"type": "string"},
+          "summary": {"type": "string"},
+          "diff": {"type": "string"}
+        }
+      }
+    }
+  }
+}

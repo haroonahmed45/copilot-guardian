@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["metadata", "failure_context", "diagnosis", "patch_plan"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": ["repo", "run_id", "redacted"],
+      "properties": {
+        "repo": {"type": "string"},
+        "run_id": {"type": ["integer", "string"]},
+        "workflow_path": {"type": "string"},
+        "redacted": {"type": "boolean"}
+      }
+    },
+    "failure_context": {
+      "type": "object",
+      "required": ["job", "step", "exit_code", "log_summary"],
+      "properties": {
+        "job": {"type": "string"},
+        "step": {"type": "string"},
+        "exit_code": {"type": "integer"},
+        "log_summary": {"type": "string"}
+      }
+    },
+    "diagnosis": {
+      "type": "object",
+      "required": ["hypotheses", "selected_hypothesis_id", "category", "root_cause", "evidence", "confidence_score"],
+      "properties": {
+        "hypotheses": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["id", "title", "category", "confidence", "evidence", "disconfirming", "next_check"],
+            "properties": {
+              "id": {"type": "string"},
+              "title": {"type": "string"},
+              "category": {"type": "string"},
+              "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+              "evidence": {"type": "array", "items": {"type": "string"}},
+              "disconfirming": {"type": "array", "items": {"type": "string"}},
+              "next_check": {"type": "string"}
+            }
+          }
+        },
+        "selected_hypothesis_id": {"type": "string"},
+        "category": {"type": "string"},
+        "root_cause": {"type": "string"},
+        "evidence": {"type": "array", "items": {"type": "string"}},
+        "confidence_score": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    },
+    "patch_plan": {
+      "type": "object",
+      "required": ["intent", "allowed_files", "strategy"],
+      "properties": {
+        "intent": {"type": "string"},
+        "allowed_files": {"type": "array", "items": {"type": "string"}},
+        "strategy": {"type": "string"}
+      }
+    }
+  }
+}

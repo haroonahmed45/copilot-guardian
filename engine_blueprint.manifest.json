@@ -1,0 +1,52 @@
+{
+  "stats": {
+    "total_dirs": 1,
+    "total_files_in_tree": 6,
+    "total_omitted": 0,
+    "total_with_contents": 6,
+    "est_tokens_prompt": 1727
+  },
+  "files": [
+    {
+      "path": "analyze.ts",
+      "mode": "summary",
+      "sha256": "bf43a85daa3d689d132d4250d042c014188e8dea410de2eb178fa7f1941dcdb0"
+    },
+    {
+      "path": "debug.ts",
+      "mode": "summary",
+      "sha256": "6d034b893306e022b0710c1b6786b8f6de0dd3afe626152a544a8190a5451b21"
+    },
+    {
+      "path": "github.ts",
+      "mode": "summary",
+      "sha256": "313ac997d2502db1e283e285cbd1629f5bbb9c69ccbf5d172162e56250cc8136"
+    },
+    {
+      "path": "patch_options.ts",
+      "mode": "summary",
+      "sha256": "b47bccaff4f02d1ae245ce19e0228bdcf4937a97e3cb1acd5350fbf9f20dedca"
+    },
+    {
+      "path": "run.ts",
+      "mode": "summary",
+      "sha256": "2133c653fbcfde40c77665f0e4927c4cca8b96923a14fd33e4300458b9619d2f"
+    },
+    {
+      "path": "util.ts",
+      "mode": "summary",
+      "sha256": "84f024fd272f8a8281c9d3335159454d74c3e6c023e37787dd51b96a174046f3"
+    }
+  ],
+  "spicy": {
+    "score": 0,
+    "counts": {
+      "ok": 1,
+      "warn": 0,
+      "risk": 0,
+      "high": 0,
+      "critical": 0
+    },
+    "findings": []
+  }
+}

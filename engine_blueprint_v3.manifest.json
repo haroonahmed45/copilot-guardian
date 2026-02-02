@@ -1,0 +1,72 @@
+{
+  "stats": {
+    "total_dirs": 1,
+    "total_files_in_tree": 10,
+    "total_omitted": 0,
+    "total_with_contents": 10,
+    "est_tokens_prompt": 2719
+  },
+  "files": [
+    {
+      "path": "analyze.ts",
+      "mode": "summary",
+      "sha256": "f6034bd02f613d942d049c8a4a67048eb994c384041a1835f2b9ca0d0f9298a9"
+    },
+    {
+      "path": "async-exec.ts",
+      "mode": "summary",
+      "sha256": "df71f81298b1a8574e519e63576bb1224b1a5920d8ed4ca38c98740902034afe"
+    },
+    {
+      "path": "auto-apply.ts",
+      "mode": "summary",
+      "sha256": "e1335019038f03ccf5a1cc637bd80a2ba7fecf38472d37a842cde30738f8901c"
+    },
+    {
+      "path": "context-enhancer.ts",
+      "mode": "summary",
+      "sha256": "75d39b400cee5cf66e7f03387451d8ac517bae02d0313318284540b1cbc4fe9f"
+    },
+    {
+      "path": "debug.ts",
+      "mode": "summary",
+      "sha256": "6d034b893306e022b0710c1b6786b8f6de0dd3afe626152a544a8190a5451b21"
+    },
+    {
+      "path": "github.ts",
+      "mode": "summary",
+      "sha256": "7b169300b16d38463371aecc2aa6ae746b309522cb08305ebe0857e6b91c0896"
+    },
+    {
+      "path": "mcp.ts",
+      "mode": "summary",
+      "sha256": "24ca61ce6301f7a203ba6ed87975cb467f36ea3a8765e5bb10b72d1e05ddcd8d"
+    },
+    {
+      "path": "patch_options.ts",
+      "mode": "summary",
+      "sha256": "cb5001ff6bf90fcdb188cf45f3b5c180a18073af8089a503119109ea018195d7"
+    },
+    {
+      "path": "run.ts",
+      "mode": "summary",
+      "sha256": "7bb7a8e109f56f88f3b6347572cddd4fa21b2154d5e58b761bb01ae4fdfbb980"
+    },
+    {
+      "path": "util.ts",
+      "mode": "summary",
+      "sha256": "84f024fd272f8a8281c9d3335159454d74c3e6c023e37787dd51b96a174046f3"
+    }
+  ],
+  "spicy": {
+    "score": 0,
+    "counts": {
+      "ok": 1,
+      "warn": 0,
+      "risk": 0,
+      "high": 0,
+      "critical": 0
+    },
+    "findings": []
+  }
+}
