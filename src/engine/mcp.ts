@@ -86,12 +86,13 @@ export async function ensureMCPConfigured(): Promise<boolean> {
     fs.copyFileSync(configPath, backupPath);
     console.log(chalk.dim(`[~] Backed up existing config to ${backupPath}`));
     
-    // Merge with existing config
+    // Merge with existing config (preserve all keys)
     try {
       const existing = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-      const config: MCPConfig = {
+      const config = {
+        ...existing, // Preserve all existing top-level keys
         mcpServers: {
-          ...existing.mcpServers,
+          ...(existing.mcpServers || {}),
           github: {
             command: 'npx',
             args: ['-y', '@modelcontextprotocol/server-github'],

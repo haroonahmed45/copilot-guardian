@@ -17,15 +17,92 @@ export interface ApplyResult {
 }
 
 /**
- * Validate file path is within repository
+ * Validate file path is within repository (Windows-safe)
  */
 function isPathSafe(filePath: string, repoRoot: string): boolean {
-  const normalized = resolve(repoRoot, filePath);
-  return normalized.startsWith(repoRoot) && !filePath.includes('..');
+  const { relative, normalize } = require('path');
+  const normalized = normalize(resolve(repoRoot, filePath));
+  const repoNormalized = normalize(repoRoot);
+  const rel = relative(repoNormalized, normalized);
+  return !rel.startsWith('..') && !require('path').isAbsolute(rel);
 }
 
 /**
- * Apply a patch to local files using git apply for safety
+ * Apply a unified diff patch safely via git apply
+ */
+export async function applyPatchViaDiff(
+  diffContent: string,
+  dryRun: boolean = false,
+  options: { allowedFiles?: string[]; repoRoot?: string } = {}
+): Promise<string[]> {
+  const repoRoot = options.repoRoot || process.cwd();
+  const filesModified: string[] = [];
+  
+  // Extract affected files from diff
+  const fileRegex = /^[\+]{3} b\/(.+)$/gm;
+  let match;
+  while ((match = fileRegex.exec(diffContent)) !== null) {
+    const file = match[1];
+    
+    // Validate path safety
+    if (!isPathSafe(file, repoRoot)) {
+      throw new Error(`Unsafe path detected in diff: ${file}`);
+    }
+    
+    // Check allowed files
+    if (options.allowedFiles && !options.allowedFiles.includes(file)) {
+      throw new Error(`File not in allowed list: ${file}`);
+    }
+    
+    filesModified.push(file);
+  }
+  
+  // Backup affected files
+  if (!dryRun) {
+    for (const file of filesModified) {
+      const filePath = resolve(repoRoot, file);
+      try {
+        const original = await readFile(filePath, 'utf-8');
+        await writeFile(filePath + '.guardian-backup', original, 'utf-8');
+      } catch {
+        // File might not exist yet
+      }
+    }
+  }
+  
+  // Apply using git apply
+  const { writeFile: writeTemp } = await import('fs/promises');
+  const { tmpdir } = await import('os');
+  const { join } = await import('path');
+  
+  const tmpFile = join(tmpdir(), `guardian-patch-${Date.now()}.diff`);
+  await writeTemp(tmpFile, diffContent, 'utf-8');
+  
+  try {
+    const args = ['apply'];
+    if (dryRun) args.push('--check');
+    args.push(tmpFile);
+    
+    await execAsync('git', args);
+    
+    if (!dryRun) {
+      for (const file of filesModified) {
+        console.log(chalk.green(`[+] Applied patch: ${file}`));
+      }
+    }
+    
+    return filesModified;
+  } finally {
+    // Cleanup temp file
+    try {
+      await import('fs/promises').then(fs => fs.unlink(tmpFile));
+    } catch {}
+  }
+}
+
+/**
+ * Apply a patch to local files (legacy text replacement - use applyPatchViaDiff instead)
+ * @deprecated Use applyPatchViaDiff for proper diff-based patching
  */
 export async function applyPatch(
   patch: { file: string; content: string }[],

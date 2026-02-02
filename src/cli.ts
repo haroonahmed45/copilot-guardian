@@ -103,10 +103,20 @@ program
           
           // Apply patch using git apply (safe method)
           try {
-            const modifiedFiles = await applyPatchViaDiff(bestPatch.patchPath, false);
+            const { applyPatchViaDiff, checkCIStatus } = await import('./engine/auto-apply');
+            const { execAsync } = await import('./engine/async-exec');
+            
+            // Read patch content
+            const fs = await import('fs/promises');
+            const diffContent = await fs.readFile(bestPatch.patchPath, 'utf-8');
+            
+            // Apply with safety checks
+            const modifiedFiles = await applyPatchViaDiff(diffContent, false, {
+              allowedFiles: bestPatch.files,
+              repoRoot: process.cwd()
+            });
             
             // Commit changes
-            const { execAsync } = await import('./engine/async-exec');
             await execAsync('git', ['add', ...modifiedFiles]);
             
             const commitMsg = `fix: Guardian auto-heal (${bestPatch.label})`;
@@ -124,7 +134,6 @@ program
             await new Promise(resolve => setTimeout(resolve, 30000));
             
             // Check CI status
-            const { checkCIStatus } = await import('./engine/auto-apply');
             const ciStatus = await checkCIStatus(commitSha);
             
             if (ciStatus === 'passed') {
