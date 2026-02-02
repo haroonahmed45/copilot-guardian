@@ -127,9 +127,13 @@ export function saveMCPUsageLog(
   }
 
   logs.push(entry);
-  fs.writeFileSync(logPath, JSON.stringify(logs, null, 2));
   
-  console.log(chalk.dim(`[>] MCP usage logged: ${resources.join(', ')}`));
+  try {
+    fs.writeFileSync(logPath, JSON.stringify(logs, null, 2));
+    console.log(chalk.dim(`[>] MCP usage logged: ${resources.join(', ')}`));
+  } catch (error) {
+    console.error(chalk.red(`[-] Failed to write MCP usage log: ${error}`));
+  }
 }
 
 /**

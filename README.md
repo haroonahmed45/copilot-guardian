@@ -1,6 +1,6 @@
 <div align="center">
 
-![Copilot Guardian Logo](docs/Logo.png)
+<img src="docs/Logo.png" alt="Copilot Guardian Logo" width="400"/>
 
 # Copilot Guardian
 

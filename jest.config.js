@@ -9,7 +9,7 @@ module.exports = {
     '!src/**/*.d.ts',
     '!src/cli.ts'
   ],
-  coverageThresholds: {
+  coverageThreshold: {
     global: {
       branches: 70,
       functions: 70,
