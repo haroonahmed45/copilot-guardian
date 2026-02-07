@@ -177,9 +177,18 @@ npm test  # ✅ Passes locally
 
 # 3. Run Guardian analysis
 cd ../..
+
+# Option 1: Against your fork (after pushing examples/)
 copilot-guardian run \
   --repo YOUR_USERNAME/copilot-guardian \
-  --last-failed \
+  --workflow examples/demo-failure/.github/workflows/ci.yml \
+  --show-reasoning \
+  --show-options
+
+# Option 2: Against main repo (immediate test, no setup needed)
+copilot-guardian run \
+  --repo flamehaven01/copilot-guardian \
+  --workflow examples/demo-failure/.github/workflows/ci.yml \
   --show-reasoning \
   --show-options
 ```
@@ -208,7 +217,13 @@ All analysis saved to `.copilot-guardian/`:
 - `fix.*.patch` - Ready-to-apply patches
 - `quality_review.*.json` - Anti-slop verdicts
 
-📖 **[See detailed demo walkthrough](examples/demo-failure/README.md)**
+📖 **[Complete Demo Walkthrough →](examples/demo-failure/README.md)** See expected Guardian output before running
+
+<!-- Screenshots will be added after demo recording:
+![Multi-Hypothesis Dashboard](docs/screenshots/01-hypothesis.png)
+![Patch Spectrum with Anti-Slop](docs/screenshots/02-patches.png)
+![Auto-Heal Success](docs/screenshots/03-success.png)
+-->
 
 ---
 
