@@ -106,7 +106,8 @@ export async function ensureMCPConfigured(): Promise<boolean> {
             command: 'npx',
             args: ['-y', '@modelcontextprotocol/server-github'],
             env: {
-              GITHUB_TOKEN: '${GITHUB_TOKEN}'
+              // M1 FIX: Use actual env var value, not literal string
+              GITHUB_TOKEN: process.env.GITHUB_TOKEN || process.env.GH_TOKEN || ''
             }
           }
         }
@@ -120,7 +121,7 @@ export async function ensureMCPConfigured(): Promise<boolean> {
             command: 'npx',
             args: ['-y', '@modelcontextprotocol/server-github'],
             env: {
-              GITHUB_TOKEN: '${GITHUB_TOKEN}'
+              GITHUB_TOKEN: process.env.GITHUB_TOKEN || process.env.GH_TOKEN || ''
             }
           }
         }
@@ -128,14 +129,14 @@ export async function ensureMCPConfigured(): Promise<boolean> {
       fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
     }
   } else {
-    // New config
+    // New config - M1 FIX: Use actual env var value
     const config: MCPConfig = {
       mcpServers: {
         github: {
           command: 'npx',
           args: ['-y', '@modelcontextprotocol/server-github'],
           env: {
-            GITHUB_TOKEN: '${GITHUB_TOKEN}'
+            GITHUB_TOKEN: process.env.GITHUB_TOKEN || process.env.GH_TOKEN || ''
           }
         }
       }

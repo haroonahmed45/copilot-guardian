@@ -15,16 +15,28 @@ export interface SourceContext {
 
 /**
  * Extract file paths from error logs
+ * M3 FIX: Stricter regex to avoid false positives (versions, domains, etc.)
  * Matches patterns like: "src/utils.ts:45", "./components/Button.tsx:12:5"
  */
 function extractFilePaths(logExcerpt: string): Array<{ file: string; line?: number }> {
-  const fileRegex = /(?:\.\/|src\/|tests?\/)?[\w\-./]+\.\w{2,4}(?::\d+)?/g;
+  // More specific pattern: requires path separator and valid code file extension
+  const fileRegex = /(?:\.\/|\.\.\/|src\/|lib\/|tests?\/|__tests__\/|spec\/)?[\w\-]+(?:\/[\w\-]+)*\.(?:ts|tsx|js|jsx|mjs|cjs|py|rb|go|rs|java|kt|swift|c|cpp|h|hpp|cs|vue|svelte)(?::(\d+)(?::(\d+))?)?/g;
   const matches = logExcerpt.match(fileRegex) || [];
   
   return matches
     .map(match => {
-      const [file, line] = match.split(':');
-      return { file, line: line ? parseInt(line, 10) : undefined };
+      const parts = match.split(':');
+      const file = parts[0];
+      const line = parts[1] ? parseInt(parts[1], 10) : undefined;
+      return { file, line };
+    })
+    // Filter out common false positives
+    .filter(({ file }) => {
+      // Skip node_modules, versions, domains
+      if (file.includes('node_modules')) return false;
+      if (/^\d+\.\d+/.test(file)) return false; // version numbers
+      if (file.includes('.com') || file.includes('.io') || file.includes('.org')) return false;
+      return true;
     })
     .filter((v, i, a) => a.findIndex(t => t.file === v.file) === i) // Unique files only
     .slice(0, 5); // Limit to top 5 files

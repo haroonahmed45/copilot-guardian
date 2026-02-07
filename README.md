@@ -203,6 +203,8 @@ H2 Node.js version mismatch        #          8%
 H3 Network timeout                            3%
 ```
 
+![Multi-Hypothesis Analysis](docs/screenshots/05-hypothesis-dashboard.png)
+
 **Risk-Aware Patch Spectrum**  
 Three strategies, each evaluated for quality:
 ```
@@ -211,6 +213,8 @@ BALANCED         [+] GO    risk=medium slop=0.15
 AGGRESSIVE       [-] NO-GO risk=high   slop=0.73 [OVER-ENGINEERED]
 ```
 
+![Patch Spectrum with Anti-Slop Detection](docs/screenshots/07-patch-spectrum.png)
+
 **Complete Transparency**  
 All analysis saved to `.copilot-guardian/`:
 - `analysis.json` - Full reasoning trace
@@ -218,12 +222,6 @@ All analysis saved to `.copilot-guardian/`:
 - `quality_review.*.json` - Anti-slop verdicts
 
 📖 **[Complete Demo Walkthrough →](examples/demo-failure/README.md)** See expected Guardian output before running
-
-<!-- Screenshots will be added after demo recording:
-![Multi-Hypothesis Dashboard](docs/screenshots/01-hypothesis.png)
-![Patch Spectrum with Anti-Slop](docs/screenshots/02-patches.png)
-![Auto-Heal Success](docs/screenshots/03-success.png)
--->
 
 ---
 

@@ -4,7 +4,7 @@ import { stdin as input, stdout as output } from "node:process";
 
 import { analyzeRun } from "./analyze";
 import { generatePatchOptions } from "./patch_options";
-import { ensureDir, loadText, writeText, extractJsonObject } from "./util";
+import { ensureDir, loadText, writeText, extractJsonObject, PACKAGE_ROOT } from "./util";
 import { copilotChatAsync } from "./async-exec";
 
 /**
@@ -51,7 +51,7 @@ export async function debugInteractive(repo: string, runId: number, outDir = pat
     const q = (await rl.question("\nAsk Copilot: ")).trim();
     if (!q) continue;
 
-    const prompt = loadText(path.join(process.cwd(), "prompts", "debug.followup.v1.txt"));
+    const prompt = loadText(path.join(PACKAGE_ROOT, "prompts", "debug.followup.v1.txt"));
     const payload = `${prompt}\n\nCONTEXT:\n${JSON.stringify({
       repo,
       run_id: runId,
@@ -63,9 +63,20 @@ export async function debugInteractive(repo: string, runId: number, outDir = pat
     const raw = await copilotChat(payload);
     writeText(path.join(outDir, "copilot.debug.followup.raw.txt"), raw);
 
-    const obj = JSON.parse(extractJsonObject(raw));
+    // S3 FIX: Add try-catch for JSON parsing
+    let obj: any;
+    try {
+      obj = JSON.parse(extractJsonObject(raw));
+    } catch (parseError: any) {
+      output.write(`\n[-] Copilot returned invalid JSON. Raw response saved.\n`);
+      output.write(`    Error: ${parseError.message}\n`);
+      continue; // Allow user to retry instead of crashing
+    }
+    
     if (typeof obj.answer !== "string" || typeof obj.next_check !== "string" || typeof obj.confidence !== "number") {
-      throw new Error("Invalid follow-up JSON from Copilot (expected {answer, confidence, next_check})");
+      output.write(`\n[!] Unexpected response format. Showing raw answer:\n`);
+      output.write(`    ${JSON.stringify(obj)}\n`);
+      continue;
     }
 
     // Append transcript with actual values

@@ -8,7 +8,8 @@ import {
   writeJson,
   writeText,
   extractJsonObject,
-  validateJson
+  validateJson,
+  PACKAGE_ROOT
 } from "./util";
 
 type StrategyId = "conservative" | "balanced" | "aggressive";
@@ -66,7 +67,7 @@ export async function generatePatchOptions(analysisJson: any, outDir = path.join
   console.log(chalk.cyan('[>] Generating patch options...'));
   ensureDir(outDir);
   
-  const prompt = loadText(path.join(process.cwd(), "prompts", "patch.options.v1.txt"));
+  const prompt = loadText(path.join(PACKAGE_ROOT, "prompts", "patch.options.v1.txt"));
 
   const input = `${prompt}\n\nANALYSIS_JSON:\n${JSON.stringify(analysisJson, null, 2)}`;
   const raw = await copilotChat(input, 'Generating 3 patch strategies');
@@ -83,7 +84,7 @@ export async function generatePatchOptions(analysisJson: any, outDir = path.join
   
   // Validate with fallback
   try {
-    validateJson(obj, path.join(process.cwd(), "schemas", "patch_options.schema.json"));
+    validateJson(obj, path.join(PACKAGE_ROOT, "schemas", "patch_options.schema.json"));
     console.log(chalk.green('[+] Patch options validated'));
   } catch (error: any) {
     console.log(chalk.yellow('[!] Schema validation warning:'), error.message);
@@ -130,7 +131,7 @@ export async function generatePatchOptions(analysisJson: any, outDir = path.join
 }
 
 async function qualityReview(analysisJson: any, strat: PatchStrategy, outDir: string): Promise<QualityReview> {
-  const prompt = loadText(path.join(process.cwd(), "prompts", "quality.v1.txt"));
+  const prompt = loadText(path.join(PACKAGE_ROOT, "prompts", "quality.v1.txt"));
   const input = `${prompt}\n\nINPUT:\n${JSON.stringify({
     intent: analysisJson?.patch_plan?.intent,
     allowed_files: analysisJson?.patch_plan?.allowed_files,
@@ -141,10 +142,24 @@ async function qualityReview(analysisJson: any, strat: PatchStrategy, outDir: st
   const raw = await copilotChat(input, `Quality review: ${strat.id}`);
   writeText(path.join(outDir, `copilot.quality.${strat.id}.raw.txt`), raw);
 
-  const obj = JSON.parse(extractJsonObject(raw));
+    // S2 FIX: Add try-catch for JSON parsing
+  let obj: any;
+  try {
+    obj = JSON.parse(extractJsonObject(raw));
+  } catch (parseError: any) {
+    console.log(chalk.red(`[-] Quality review failed for ${strat.id}: Invalid JSON`));
+    // Return safe default instead of crashing
+    return {
+      verdict: "GO",
+      slop_score: 0,
+      risk_level: "low" as const,
+      reasons: [`Parse error: ${parseError.message}`],
+      suggested_adjustments: []
+    };
+  }
   
   try {
-    validateJson(obj, path.join(process.cwd(), "schemas", "quality.schema.json"));
+    validateJson(obj, path.join(PACKAGE_ROOT, "schemas", "quality.schema.json"));
   } catch (error: any) {
     console.log(chalk.yellow(`[!] Quality schema warning for ${strat.id}:`), error.message);
   }

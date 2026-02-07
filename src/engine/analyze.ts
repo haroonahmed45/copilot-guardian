@@ -11,7 +11,8 @@ import {
   writeJson,
   writeText,
   extractJsonObject,
-  validateJson
+  validateJson,
+  PACKAGE_ROOT
 } from "./util";
 
 export interface Hypothesis {
@@ -72,7 +73,7 @@ export async function analyzeRun(repo: string, runId: number, outDir = path.join
   const sourceContexts = await enhanceContextWithSources(ctx.logExcerpt, repo, ctx.headSha);
   const sourceContextPrompt = formatSourceContextForPrompt(sourceContexts);
 
-  const promptPath = path.join(process.cwd(), "prompts", "analysis.v2.txt");
+  const promptPath = path.join(PACKAGE_ROOT, "prompts", "analysis.v2.txt");
   let prompt = loadText(promptPath);
   
   // Enhance prompt with MCP instructions if available
@@ -125,7 +126,7 @@ export async function analyzeRun(repo: string, runId: number, outDir = path.join
   
   // Validate with fallback
   try {
-    validateJson(obj, path.join(process.cwd(), "schemas", "analysis.schema.json"));
+    validateJson(obj, path.join(PACKAGE_ROOT, "schemas", "analysis.schema.json"));
     console.log(chalk.green('[+] Response validated against schema'));
   } catch (error: any) {
     console.log(chalk.yellow('[!] Schema validation warning:'), error.message);
