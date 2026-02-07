@@ -158,6 +158,60 @@ You get:
 
 **Guardian suggests. YOU command.**
 
+---
+
+## 🎬 Try It Yourself (2 Minutes)
+
+### Quick Start: Run Against Demo Failure
+
+```bash
+# 1. Clone and setup
+git clone https://github.com/flamehaven01/copilot-guardian
+cd copilot-guardian
+npm install && npm run build
+
+# 2. Test the demo failure
+cd examples/demo-failure
+npm install
+npm test  # ✅ Passes locally
+
+# 3. Run Guardian analysis
+cd ../..
+copilot-guardian run \
+  --repo YOUR_USERNAME/copilot-guardian \
+  --last-failed \
+  --show-reasoning \
+  --show-options
+```
+
+### What You'll See
+
+**Multi-Hypothesis Dashboard**  
+Three competing theories with confidence scores:
+```
+H1 Missing environment variable    ########## 89%
+H2 Node.js version mismatch        #          8%  
+H3 Network timeout                            3%
+```
+
+**Risk-Aware Patch Spectrum**  
+Three strategies, each evaluated for quality:
+```
+CONSERVATIVE     [+] GO    risk=low    slop=0.10
+BALANCED         [+] GO    risk=medium slop=0.15
+AGGRESSIVE       [-] NO-GO risk=high   slop=0.73 [OVER-ENGINEERED]
+```
+
+**Complete Transparency**  
+All analysis saved to `.copilot-guardian/`:
+- `analysis.json` - Full reasoning trace
+- `fix.*.patch` - Ready-to-apply patches
+- `quality_review.*.json` - Anti-slop verdicts
+
+📖 **[See detailed demo walkthrough](examples/demo-failure/README.md)**
+
+---
+
 ## Quick Start
 
 ### Prerequisites
