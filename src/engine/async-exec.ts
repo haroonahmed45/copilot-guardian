@@ -87,7 +87,7 @@ export async function execAsync(
         resolve(stdout);
       } else {
         spinner?.fail();
-        
+
         if (stderr.includes('rate limit')) {
           reject(new RateLimitError());
         } else if (stderr.includes('not found') || stderr.includes('command not found')) {
@@ -121,7 +121,7 @@ export async function execWithRetry(
     try {
       return await execAsync(command, args, input, {
         ...options,
-        spinnerText: attempt > 1 
+        spinnerText: attempt > 1
           ? `${options.spinnerText} (attempt ${attempt}/${maxRetries})`
           : options.spinnerText
       });
@@ -172,19 +172,22 @@ export async function copilotChatAsync(
 
     return result;
   } catch (error: any) {
-    if (error.message.includes('not found')) {
+    // Null-safe error message access
+    const errorMsg = error?.message || '';
+    
+    if (errorMsg.includes('not found')) {
       throw new CopilotError(
         'GitHub CLI not installed. Install: https://cli.github.com'
       );
     }
 
-    if (error.message.includes('not authenticated')) {
+    if (errorMsg.includes('not authenticated')) {
       throw new CopilotError(
         'Not authenticated. Run: gh auth login'
       );
     }
 
-    if (error.message.includes('copilot') && error.message.includes('not found')) {
+    if (errorMsg.includes('copilot') && errorMsg.includes('not found')) {
       throw new CopilotError(
         'Copilot CLI not enabled. Install: gh extension install github/gh-copilot'
       );
@@ -215,9 +218,9 @@ export async function ghAsync(
 }
 
 /**
- * Helper: sleep for ms milliseconds
+ * Sleep utility (exported for test mocking)
  */
-function sleep(ms: number): Promise<void> {
+export function sleep(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -226,7 +229,7 @@ function sleep(ms: number): Promise<void> {
  */
 export async function checkGHCLI(): Promise<boolean> {
   try {
-    await execAsync('gh', ['--version'], undefined, { 
+    await execAsync('gh', ['--version'], undefined, {
       showSpinner: false,
       timeout: 5000
     });
@@ -241,7 +244,7 @@ export async function checkGHCLI(): Promise<boolean> {
  */
 export async function checkCopilotCLI(): Promise<boolean> {
   try {
-    await execAsync('gh', ['copilot', '--version'], undefined, { 
+    await execAsync('gh', ['copilot', '--version'], undefined, {
       showSpinner: false,
       timeout: 5000
     });

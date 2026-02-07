@@ -113,14 +113,28 @@ export async function analyzeRun(repo: string, runId: number, outDir = path.join
   
   console.log(chalk.dim('[>] Raw response saved'));
 
-  const obj = JSON.parse(extractJsonObject(raw));
+  // Parse with error handling
+  let obj: any;
+  try {
+    obj = JSON.parse(extractJsonObject(raw));
+  } catch (parseError: any) {
+    console.log(chalk.red('[-] JSON parsing failed'));
+    console.log(chalk.dim('    Raw response saved to copilot.analysis.raw.txt'));
+    throw new Error(`Copilot returned invalid JSON: ${parseError.message}\n\nHint: Check if Copilot CLI is working: gh copilot chat "test"`);
+  }
   
-  // Validate
+  // Validate with fallback
   try {
     validateJson(obj, path.join(process.cwd(), "schemas", "analysis.schema.json"));
     console.log(chalk.green('[+] Response validated against schema'));
   } catch (error: any) {
     console.log(chalk.yellow('[!] Schema validation warning:'), error.message);
+    console.log(chalk.yellow('[!] Attempting to use response anyway (best-effort mode)'));
+    
+    // Check if at least the critical fields exist
+    if (!obj.diagnosis || !obj.diagnosis.hypotheses) {
+      throw new Error('Critical fields missing from Copilot response. Cannot proceed.');
+    }
   }
 
   const analysisPath = path.join(outDir, "analysis.json");

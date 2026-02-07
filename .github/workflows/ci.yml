@@ -27,10 +27,6 @@ jobs:
       
       - name: Run tests
         run: npm test
-        continue-on-error: true
-      
-      - name: Test Summary
-        run: echo "[!] Some integration tests may fail in CI - this is expected"
       
       - name: Build project
         run: npm run build

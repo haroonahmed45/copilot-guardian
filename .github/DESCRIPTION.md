@@ -1,1 +1,0 @@
-Autonomous CI/CD recovery tool powered by GitHub Copilot CLI. Analyzes failures with multi-hypothesis reasoning, generates risk-stratified patches (Conservative/Balanced/Aggressive), and auto-applies fixes with full transparency and drift-free AI governance.

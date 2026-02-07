@@ -1,0 +1,277 @@
+{
+  "stats": {
+    "total_dirs": 13,
+    "total_files_in_tree": 58,
+    "total_omitted": 9,
+    "total_with_contents": 49,
+    "est_tokens_prompt": 8962
+  },
+  "files": [
+    {
+      "path": "schemas\\analysis.schema.json",
+      "mode": "summary",
+      "sha256": "129cbd853a49f2bcfa4a32575e29e97f338c5f7a4503344b62bdf47c8d8954ee"
+    },
+    {
+      "path": "schemas\\patch_options.schema.json",
+      "mode": "summary",
+      "sha256": "92a86d61f51079ce22276337578f00bd5bd868846910b9864b4eeb1f21ab7b28"
+    },
+    {
+      "path": "schemas\\quality.schema.json",
+      "mode": "summary",
+      "sha256": "9efc862f1942e1525dfbfd49d012ad40fdd579dc41552e786226ecbc15f0dbcb"
+    },
+    {
+      "path": ".gitignore",
+      "mode": "summary",
+      "sha256": "23661e0c1248609d8d184bde43c6e4ceca877324ef4b77d394bda12a19a01ce7"
+    },
+    {
+      "path": "AUDIT_FIXES.md",
+      "mode": "summary",
+      "sha256": "d3fcc7a55d50a6a6cf2b1e598df7c68453c705a938ce3ed50dfc6927dda253ee"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "mode": "summary",
+      "sha256": "0f8eb9a85a46e73ba6f7518027a8648881d9722ee69fc67b1fe6fda609aa61e5"
+    },
+    {
+      "path": "CONTRIBUTING.md",
+      "mode": "summary",
+      "sha256": "99b0bf5da6efc2f4dc7a3d6b798f32ba9d0aeca73e8c574689e8204d5737fe04"
+    },
+    {
+      "path": "copilot-guardian_blueprint.manifest.json",
+      "mode": "summary",
+      "sha256": "0f49e499bc9b71a4d06c186d679068fe42fa169b067c9ac1b28b7662427f00b3"
+    },
+    {
+      "path": "FINAL_CHECKLIST.md",
+      "mode": "summary",
+      "sha256": "0cfac21564c7425897c25cea24673537aceaee5149b2adc3fc402b424a99d077"
+    },
+    {
+      "path": "jest.config.js",
+      "mode": "summary",
+      "sha256": "9f41d02e4f9d548ec39d1a1d8bab8db6b7b7f59fa00e13af8761703aa408e614"
+    },
+    {
+      "path": "LICENSE",
+      "mode": "summary",
+      "sha256": "e429aec4393f0fabf8979ff5918023986962a612b49558d68430b6ffd0b35f26"
+    },
+    {
+      "path": "package.json",
+      "mode": "summary",
+      "sha256": "2144ece99b6a8dcab8cafbd60ab6351b5988f41712523986f2e8cedfc823ada5"
+    },
+    {
+      "path": "README.md",
+      "mode": "summary",
+      "sha256": "0710297dc1fef9c96e236be9c2e78d2c74c6e48d1f716a4bc0419c34af07afbb"
+    },
+    {
+      "path": "SECURITY.md",
+      "mode": "summary",
+      "sha256": "8c0722059038f084bc592e8142c54fb07b2ddb0902cdbea0d385a911cdff8886"
+    },
+    {
+      "path": "TEST_STATUS.md",
+      "mode": "summary",
+      "sha256": "af92026b9d14f700828c9a17a0577a6687234b8b30800afe0609dd36d0f493d0"
+    },
+    {
+      "path": "tsconfig.json",
+      "mode": "summary",
+      "sha256": "a72b1982417a8f176795177d76886b94746bd26803bc8b7a5116f65fd8002889"
+    },
+    {
+      "path": ".copilot-guardian-test\\analysis.json",
+      "mode": "summary",
+      "sha256": "6bf5121c08175c171a6281656e01682eca21bd2fc20e1780950c90eee7fec45e"
+    },
+    {
+      "path": ".copilot-guardian-test\\copilot.analysis.prompt.txt",
+      "mode": "summary",
+      "sha256": "8016969b9aa5519226386d3f14153b2ace288fb9ce21f9181431f21fe8dad0df"
+    },
+    {
+      "path": ".copilot-guardian-test\\input.context.json",
+      "mode": "summary",
+      "sha256": "2b38c940aff18752d9c65fba770ee823f98017be73ed91477b7d678f804da9f2"
+    },
+    {
+      "path": ".copilot-guardian-test\\reasoning_trace.json",
+      "mode": "summary",
+      "sha256": "5e6d7cd0e4fdca6f993a0ccd962e85e179d0a7496a4b2c1e25ac6689fe731d18"
+    },
+    {
+      "path": ".test-output\\copilot.patch.options.raw.txt",
+      "mode": "summary",
+      "sha256": "2c98816bbb1dca52330d5ce271449ff10decaffb10549295eff7d61a7065c03a"
+    },
+    {
+      "path": ".test-output\\copilot.quality.aggressive.raw.txt",
+      "mode": "summary",
+      "sha256": "46a3121eb0f183b0f2e1145fdccfe7589a72cdd2daa09089660ecf23832743a6"
+    },
+    {
+      "path": ".test-output\\copilot.quality.balanced.raw.txt",
+      "mode": "summary",
+      "sha256": "d4c19923be2160ff854b76868aa199d0eb80c8a7efed638afb60978d757c855f"
+    },
+    {
+      "path": ".test-output\\fix.aggressive.patch",
+      "mode": "summary",
+      "sha256": "612f1fa5282cf336e3c251d40d7d937f502ecb29c4e479ea4c334716150ab27b"
+    },
+    {
+      "path": ".test-output\\fix.balanced.patch",
+      "mode": "summary",
+      "sha256": "612f1fa5282cf336e3c251d40d7d937f502ecb29c4e479ea4c334716150ab27b"
+    },
+    {
+      "path": ".test-output\\fix.conservative.patch",
+      "mode": "summary",
+      "sha256": "612f1fa5282cf336e3c251d40d7d937f502ecb29c4e479ea4c334716150ab27b"
+    },
+    {
+      "path": ".test-output\\patch_options.json",
+      "mode": "summary",
+      "sha256": "56a95b803b0706a7d89c9e3b87b66c825d5d4b618e8ad34f669581fbf681baae"
+    },
+    {
+      "path": "docs\\ARCHITECTURE.md",
+      "mode": "summary",
+      "sha256": "29c3aaa28a17da650a77e2b0d2c1a8f5ce6fd41cc8e02a60918b3a4a0136de88"
+    },
+    {
+      "path": "docs\\BEFORE_AFTER_IMPACT.md",
+      "mode": "summary",
+      "sha256": "7eebba794f3c2a0aed8d3f52c3aff27e2b44df4e9c33db3e83f795e36032d021"
+    },
+    {
+      "path": "docs\\Logo.png",
+      "mode": "summary",
+      "sha256": "fd50dffaccf3ed62a0fa1390c413efb15ddf479ee49ca97d0967c5dcc2f0dfc5"
+    },
+    {
+      "path": "prompts\\debug.followup.v1.txt",
+      "mode": "summary",
+      "sha256": "a9bf0078860884826b55e79ec95be8d610aee25dec6c330cfd300ed20ef83b67"
+    },
+    {
+      "path": "prompts\\patch.options.v1.txt",
+      "mode": "summary",
+      "sha256": "c10027ccfa7410d976d5b33833d4e3fc1c8e4755535e4d96215fe0dec6fb9909"
+    },
+    {
+      "path": "prompts\\patch.simple.v1.txt",
+      "mode": "summary",
+      "sha256": "82b888ebd645158a8032aee1c3fcdd6ba5efbe795fa2d85a39fe7d564f4ab876"
+    },
+    {
+      "path": "prompts\\quality.v1.txt",
+      "mode": "summary",
+      "sha256": "9ddced0bdd90ec4376cfc01aa9c88afee1a38866a9d05b29a2b3611bff521b11"
+    },
+    {
+      "path": "src\\cli.ts",
+      "mode": "summary",
+      "sha256": "b06d63b518b5277d0749821e9dfc9ef63393e77af279ba55cce2a0520f01a311"
+    },
+    {
+      "path": ".github\\workflows\\ci.yml",
+      "mode": "summary",
+      "sha256": "526bf1f04643c34203d98cdab6c86cbd465a768e4f67e13864e1215ea9e63ffe"
+    },
+    {
+      "path": "src\\engine\\analyze.ts",
+      "mode": "summary",
+      "sha256": "f6034bd02f613d942d049c8a4a67048eb994c384041a1835f2b9ca0d0f9298a9"
+    },
+    {
+      "path": "src\\engine\\async-exec.ts",
+      "mode": "summary",
+      "sha256": "626bb333239176776f2ffe21f782cfbe0153c86d56e17c545b15781fbd346afd"
+    },
+    {
+      "path": "src\\engine\\auto-apply.ts",
+      "mode": "summary",
+      "sha256": "09aec59c5ed4cb1e211e935377c962a5f759ec4868d1217f3e5792b0a797838a"
+    },
+    {
+      "path": "src\\engine\\context-enhancer.ts",
+      "mode": "summary",
+      "sha256": "75d39b400cee5cf66e7f03387451d8ac517bae02d0313318284540b1cbc4fe9f"
+    },
+    {
+      "path": "src\\engine\\debug.ts",
+      "mode": "summary",
+      "sha256": "cca39e1c5d2889b4be5726604c36354bf2bb055074f76e82c981dea455a832f7"
+    },
+    {
+      "path": "src\\engine\\github.ts",
+      "mode": "summary",
+      "sha256": "7b169300b16d38463371aecc2aa6ae746b309522cb08305ebe0857e6b91c0896"
+    },
+    {
+      "path": "src\\engine\\mcp.ts",
+      "mode": "summary",
+      "sha256": "2f82e312a72cbc02da6ec2f6cfb67b42e8ee64a48fadbc8b9512fe323a7ed2c1"
+    },
+    {
+      "path": "src\\engine\\patch_options.ts",
+      "mode": "summary",
+      "sha256": "0ded24accf52fc06adecca6338968db4c1fd5ab4238cf1a72867ca7fa049944f"
+    },
+    {
+      "path": "src\\engine\\run.ts",
+      "mode": "summary",
+      "sha256": "7bb7a8e109f56f88f3b6347572cddd4fa21b2154d5e58b761bb01ae4fdfbb980"
+    },
+    {
+      "path": "src\\engine\\util.ts",
+      "mode": "summary",
+      "sha256": "84f024fd272f8a8281c9d3335159454d74c3e6c023e37787dd51b96a174046f3"
+    },
+    {
+      "path": "src\\ui\\dashboard.ts",
+      "mode": "summary",
+      "sha256": "6ce67561963766c803206bba113645cc8aced17fdc48d36947e98bc08e94eecf"
+    },
+    {
+      "path": "tests\\analyze.test.ts",
+      "mode": "summary",
+      "sha256": "a92b090f5d126309394f5608c8fef09e250190773407bc09e95248e203baa968"
+    },
+    {
+      "path": "tests\\async-exec.test.ts",
+      "mode": "summary",
+      "sha256": "5a7a88c73d34492c104d2788b7221eae24058fa9cde7207e7344f0dbd9064630"
+    }
+  ],
+  "spicy": {
+    "score": 10,
+    "counts": {
+      "ok": 0,
+      "warn": 0,
+      "risk": 1,
+      "high": 0,
+      "critical": 0
+    },
+    "findings": [
+      {
+        "file": "-",
+        "line": 0,
+        "severity": "risk",
+        "category": "security",
+        "message": "masked secrets detected in content",
+        "suggestion": "review secrets and rotate keys if needed",
+        "score": 10
+      }
+    ]
+  }
+}

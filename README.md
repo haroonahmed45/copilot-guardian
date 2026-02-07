@@ -7,6 +7,8 @@
 **The AI That Heals Your CI While You Sleep** 🌙 → ☀️
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
+[![Tests: Passing](https://img.shields.io/badge/tests-38%20passing-brightgreen.svg?style=flat-square)](https://github.com/flamehaven01/copilot-guardian)
+[![Version: 0.1.0](https://img.shields.io/badge/version-0.1.0-blue.svg?style=flat-square)](https://github.com/flamehaven01/copilot-guardian/releases)
 [![Sovereign AI](https://img.shields.io/badge/Sovereign-AI-8A2BE2.svg?style=flat-square&logo=githubactions&logoColor=white)](https://dev.to/flamehaven)
 [![Anti-Slop Certified](https://img.shields.io/badge/Anti--Slop-Certified-00C853.svg?style=flat-square)](https://github.com/flamehaven01/copilot-guardian)
 [![Copilot CLI Challenge](https://img.shields.io/badge/GitHub-Copilot_Challenge-181717.svg?style=flat-square&logo=github&logoColor=white)](https://dev.to/challenges/github-2026-01-21)
@@ -23,6 +25,8 @@
 > **[📊 See the Before/After Impact Report](docs/BEFORE_AFTER_IMPACT.md)** - Real developer time savings (2.5 hours → 2 minutes)
 > 
 > **[🏗️ Architecture & Technical Deep Dive](docs/ARCHITECTURE.md)** - Complete system design with Mermaid diagrams
+> 
+> **[🧪 Testing Philosophy](TESTING_PHILOSOPHY.md)** - Why we test real-world first
 
 ---
 

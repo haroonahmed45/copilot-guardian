@@ -72,13 +72,26 @@ export async function generatePatchOptions(analysisJson: any, outDir = path.join
   const raw = await copilotChat(input, 'Generating 3 patch strategies');
   writeText(path.join(outDir, "copilot.patch.options.raw.txt"), raw);
 
-  const obj = JSON.parse(extractJsonObject(raw)) as PatchOptions;
+  // Parse with error handling
+  let obj: PatchOptions;
+  try {
+    obj = JSON.parse(extractJsonObject(raw)) as PatchOptions;
+  } catch (parseError: any) {
+    console.log(chalk.red('[-] Patch generation failed: Invalid JSON from Copilot'));
+    throw new Error(`Copilot returned invalid JSON: ${parseError.message}\n\nSaved to: copilot.patch.options.raw.txt`);
+  }
   
+  // Validate with fallback
   try {
     validateJson(obj, path.join(process.cwd(), "schemas", "patch_options.schema.json"));
     console.log(chalk.green('[+] Patch options validated'));
   } catch (error: any) {
     console.log(chalk.yellow('[!] Schema validation warning:'), error.message);
+    
+    // Check critical structure
+    if (!obj.strategies || !Array.isArray(obj.strategies) || obj.strategies.length === 0) {
+      throw new Error('No patch strategies generated. Check copilot.patch.options.raw.txt for details.');
+    }
   }
 
   // Write patch files
