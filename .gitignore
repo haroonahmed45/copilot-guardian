@@ -5,3 +5,20 @@ dist/
 .test-output/
 .DS_Store
 *.log
+
+# Internal development documents (not for public release)
+*_blueprint.md
+*_blueprint.jsonl
+*_blueprint.manifest.json
+certification_report.md
+TESTING_PHILOSOPHY.md
+SUBMISSION_CHECKLIST*.md
+TEST_STATUS.md
+TEST_SUITE_UPDATE.md
+PATCH_REPORT.md
+FINAL_CHECKLIST.md
+AUDIT_FIXES.md
+docs/BEFORE_AFTER_IMPACT.md
+docs/RESILIENCE_STRATEGY.md
+NUL
+guardian-output.txt

@@ -18,15 +18,11 @@
 
 **Multi-Hypothesis CI Debugger • Risk-Aware Patching • Complete Transparency**
 
-[Features](#winning-features) • [Installation](#quick-start-5-minutes) • [Philosophy](#sovereign-ai-philosophy) • [Demo](docs/BEFORE_AFTER_IMPACT.md)
+[Features](#winning-features) • [Installation](#quick-start-5-minutes) • [Philosophy](#sovereign-ai-philosophy) • [Architecture](docs/ARCHITECTURE.md)
 
 </div>
 
-> **[📊 See the Before/After Impact Report](docs/BEFORE_AFTER_IMPACT.md)** - Real developer time savings (2.5 hours → 2 minutes)
-> 
 > **[🏗️ Architecture & Technical Deep Dive](docs/ARCHITECTURE.md)** - Complete system design with Mermaid diagrams
-> 
-> **[🧪 Testing Philosophy](TESTING_PHILOSOPHY.md)** - Why we test real-world first
 
 ---
 
