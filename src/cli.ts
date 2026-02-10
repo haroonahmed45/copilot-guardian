@@ -35,7 +35,7 @@ const program = new Command();
 program
   .name("copilot-guardian")
   .description(chalk.cyan("[#] Sovereign AI Guardian for GitHub Actions"))
-  .version("0.1.3");
+  .version("0.1.4");
 
 program
   .command("auth")

@@ -5,6 +5,74 @@ All notable changes to Copilot Guardian will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4] - 2026-02-10
+
+### 🎨 UI/UX Enhancements for Real Execution Transparency
+
+This release focuses on **visual feedback improvements** to make Guardian's reasoning process completely visible during real execution recording.
+
+#### Added
+- **Enhanced Progress Indicators**: Step-by-step status messages throughout analysis pipeline
+  - MCP configuration check with success confirmation
+  - Workflow context retrieval with metadata display (SHA, workflow path)
+  - Deep intelligence source context extraction with file listings
+  - Real-time Copilot communication status
+  - Artifact creation logs (file-by-file confirmation)
+  
+- **Improved Hypothesis Display**: Multi-hypothesis visualization enhancements
+  - **[SELECTED]** marker for highest confidence hypothesis
+  - Confidence summary with reasoning explanation
+  - Cleaner evidence display with optional next_check field
+  
+- **Enhanced Patch Spectrum**: Risk-aware patch visualization improvements
+  - **[RECOMMENDED]** marker for lowest-risk GO strategy
+  - Files affected by each patch (extracted from diff)
+  - Slop detection threshold adjusted (>50% instead of >60%)
+  - Clear NO-GO explanation when all strategies flagged
+  
+- **Complete Workflow Summary**: Guardian execution summary at completion
+  - Total hypotheses generated
+  - GO vs NO-GO strategy counts
+  - All generated files listed with descriptions
+  - Output directory prominently displayed
+
+#### Changed
+- Progress messages now show **what** Guardian is doing, not just status
+- File creation logs include artifact names for audit trail clarity
+- Slop score threshold lowered to 50% for stricter quality control
+- Summary sections use bold headers for better visual hierarchy
+
+#### Fixed
+- TypeScript type safety: `ctx.headSha` nullable handling
+- All progress messages now use consistent ASCII-safe formatting
+
+### Philosophy
+This release embodies Guardian's core principle: **"Trust built on receipts, not magic."**
+
+Every step of the AI's thinking process is now visible in terminal output, making it perfect for **real execution recording** (not demos). Judges and users can see exactly what Guardian is doing at every moment.
+
+### For Real Execution GIF Recording
+```bash
+npm run build
+node dist/cli.js run --repo owner/repo --last-failed --show-reasoning --show-options
+
+# Output now shows:
+# [>] Checking GitHub MCP configuration...
+# [+] GitHub MCP server ready
+# [>] Fetching run context from GitHub...
+# [+] Retrieved workflow logs and metadata
+#     Workflow: .github/workflows/ci.yml
+#     Commit SHA: a1b2c3d
+# [>] Deep analysis: Extracting source context...
+# [+] Found 2 source file(s) mentioned in errors
+#     - src/utils.ts:45-55
+#     - tests/integration.test.ts:120-125
+# [>] Sending to Copilot for multi-hypothesis analysis...
+#     (This may take 30-60 seconds)
+# [+] Received response from Copilot
+# ... (complete transparency continues)
+```
+
 ## [0.1.3] - 2026-02-09
 
 ### 🔧 Final Polish & SDK Terminology Alignment

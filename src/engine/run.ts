@@ -17,6 +17,9 @@ export async function runGuardian(repo: string, runId: number, flags: RunFlags) 
   ensureDir(outDir);
   
   console.log(chalk.bold.cyan('\n=== Copilot Guardian Analysis ===\n'));
+  console.log(chalk.dim(`Repository: ${repo}`));
+  console.log(chalk.dim(`Run ID: ${runId}`));
+  console.log(chalk.dim(`Output: ${outDir}\n`));
 
   const { analysisPath, analysis, ctx } = await analyzeRun(repo, runId, outDir);
 
@@ -38,7 +41,17 @@ export async function runGuardian(repo: string, runId: number, flags: RunFlags) 
   };
   writeJson(path.join(outDir, "guardian.report.json"), report);
   
-  console.log(chalk.dim(`\nAll artifacts saved to: ${outDir}`));
+  console.log(chalk.green.bold('\n=== Guardian Complete ==='));
+  console.log(chalk.dim(`All artifacts saved to: ${outDir}`));
+  console.log(chalk.dim('\nGenerated files:'));
+  console.log(chalk.dim('  - analysis.json (multi-hypothesis results)'));
+  console.log(chalk.dim('  - reasoning_trace.json (audit trail)'));
+  console.log(chalk.dim('  - copilot.analysis.raw.txt (full Copilot response)'));
+  if (flags.showOptions) {
+    console.log(chalk.dim('  - fix.*.patch (3 patch strategies)'));
+    console.log(chalk.dim('  - patch_options.json (quality review results)'));
+  }
+  console.log("");
 
   return { analysis, patchIndex, outDir, ctx };
 }

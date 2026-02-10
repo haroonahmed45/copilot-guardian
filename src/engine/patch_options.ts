@@ -64,14 +64,19 @@ async function copilotChat(input: string, context: string): Promise<string> {
 }
 
 export async function generatePatchOptions(analysisJson: any, outDir = path.join(process.cwd(), ".copilot-guardian")) {
-  console.log(chalk.cyan('[>] Generating patch options...'));
+  console.log(chalk.cyan('\n[>] Generating 3-strategy patch options...'));
+  console.log(chalk.dim('    Conservative: Minimal changes, low risk'));
+  console.log(chalk.dim('    Balanced: Standard fix, moderate scope'));
+  console.log(chalk.dim('    Aggressive: Comprehensive, high risk'));
   ensureDir(outDir);
   
   const prompt = loadText(path.join(PACKAGE_ROOT, "prompts", "patch.options.v1.txt"));
 
   const input = `${prompt}\n\nANALYSIS_JSON:\n${JSON.stringify(analysisJson, null, 2)}`;
+  console.log(chalk.cyan('[>] Asking Copilot for patch strategies...'));
   const raw = await copilotChat(input, 'Generating 3 patch strategies');
   writeText(path.join(outDir, "copilot.patch.options.raw.txt"), raw);
+  console.log(chalk.green('[+] Received patch strategies from Copilot'));
 
   // Parse with error handling
   let obj: PatchOptions;
@@ -96,15 +101,17 @@ export async function generatePatchOptions(analysisJson: any, outDir = path.join
   }
 
   // Write patch files
-  console.log(chalk.dim('[>] Running quality reviews...'));
+  console.log(chalk.cyan('[>] Running quality reviews on each strategy...'));
   const results: any[] = [];
   for (const strat of obj.strategies) {
     const patchPath = path.join(outDir, `fix.${strat.id}.patch`);
     writeText(patchPath, strat.diff.trim() + "\n");
+    console.log(chalk.dim(`[>] Saved patch: fix.${strat.id}.patch`));
 
     // Extract affected files from diff (add/modify/delete/rename)
     const affectedFiles = extractFilesFromDiff(strat.diff);
 
+    console.log(chalk.dim(`[>] Quality checking ${strat.id} strategy...`));
     const quality = await qualityReview(analysisJson, strat, outDir);
     results.push({
       label: strat.label,
@@ -119,13 +126,17 @@ export async function generatePatchOptions(analysisJson: any, outDir = path.join
     
     const verdictColor = quality.verdict === 'GO' ? chalk.green : chalk.red;
     const slopScore = quality.slop_score !== undefined ? quality.slop_score.toFixed(2) : '0.00';
-    console.log(chalk.dim(`  ${strat.label.padEnd(15)}`), verdictColor(quality.verdict), chalk.dim(`slop=${slopScore}`));
+    console.log(chalk.dim(`    ${strat.label.padEnd(15)}`), verdictColor(quality.verdict), chalk.dim(`slop=${slopScore}`));
   }
 
   const index = { timestamp: new Date().toISOString(), results };
   writeJson(path.join(outDir, "patch_options.json"), index);
+  console.log(chalk.green(`[+] Saved patch index: patch_options.json`));
   
-  console.log(chalk.green('[+] Patch options complete'));
+  console.log(chalk.green.bold('\n[+] Patch options complete!'));
+  console.log(chalk.dim(`    Total strategies: ${results.length}`));
+  console.log(chalk.dim(`    GO verdicts: ${results.filter(r => r.verdict === 'GO').length}`));
+  console.log(chalk.dim(`    NO-GO (slop detected): ${results.filter(r => r.verdict === 'NO_GO').length}`));
 
   return { options: obj, index };
 }

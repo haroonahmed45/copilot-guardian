@@ -1,6 +1,6 @@
 {
   "name": "copilot-guardian",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "type": "module",
   "description": "Production-ready AI Guardian for GitHub Actions - Multi-Hypothesis CI Debugger with Risk-Aware Patching",
   "main": "dist/cli.js",

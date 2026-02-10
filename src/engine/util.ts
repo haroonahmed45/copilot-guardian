@@ -9,22 +9,21 @@ const Ajv = (AjvModule as any).default || AjvModule;
 const addFormats = (addFormatsModule as any).default || addFormatsModule;
 
 // Get current directory - works in both ESM and CommonJS environments
+import { fileURLToPath } from 'node:url';
+
 const getCurrentDir = (): string => {
   // In CommonJS (Jest tests), __dirname is defined
   if (typeof __dirname !== 'undefined') {
     return __dirname;
   }
-  // In ESM (runtime), use import.meta.url via eval to avoid static analysis
-  // This code path is only executed at runtime, not during Jest tests
-  try {
-    const { fileURLToPath } = require('node:url');
-    // Use eval to prevent Jest from parsing import.meta at compile time
-    const metaUrl = eval('import.meta.url');
-    return path.dirname(fileURLToPath(metaUrl));
-  } catch {
-    // Fallback: assume we're in the project root
-    return process.cwd();
+  // In ESM (runtime with NodeNext), import.meta.url is available
+  // @ts-ignore - import.meta is available in ESM modules
+  if (typeof import.meta !== 'undefined' && import.meta.url) {
+    // @ts-ignore
+    return path.dirname(fileURLToPath(import.meta.url));
   }
+  // Fallback: assume we're in the project root
+  return process.cwd();
 };
 
 // Get package root directory (works for both local dev and global install)
