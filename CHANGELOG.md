@@ -5,6 +5,34 @@ All notable changes to Copilot Guardian will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.5] - 2026-02-11
+
+### Speed + Stable Demo Mode
+
+#### Added
+- **`--fast` mode for run/analyze/eval**
+  - New CLI flag reduces analysis and patch-generation latency for stable demos.
+  - Propagates through `run -> analyze + patch options` and evaluation harness runs.
+- **Fast-mode patch generation controls**
+  - Shorter generation timeout and retry budget in fast mode.
+  - Parallel quality reviews for strategy set evaluation.
+  - Optional model quality skip when deterministic guard already returns `NO_GO`.
+
+#### Changed
+- **Analysis speed tuning**
+  - Fast mode reduces deep source-context fetch scope (`maxSourceFiles` lowered).
+  - Analysis model timeout is shortened in fast mode.
+- **Quality artifact resilience**
+  - `quality_review.<strategy>.json` is now persisted even when model output parse fails.
+- **README operational guidance**
+  - Judge quick test now defaults to stable fast profile (`--show-options --fast --max-log-chars 20000`).
+  - Added immediate no-code speed tuning section using `COPILOT_TIMEOUT_MS`.
+  - Clarified that `--show-reasoning` is optional and slower.
+
+#### Fixed
+- **Fast-path plumbing consistency**
+  - Wired fast option into evaluation report metadata and markdown output.
+
 ## [0.2.4] - 2026-02-11
 
 ### README Clarity + Version/Tag Alignment

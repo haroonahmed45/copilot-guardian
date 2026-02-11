@@ -58,7 +58,7 @@ const program = new Command();
 program
   .name("copilot-guardian")
   .description(chalk.cyan("[#] Sovereign AI Guardian for GitHub Actions"))
-  .version("0.2.4");
+  .version("0.2.5");
 
 program
   .command("auth")
@@ -102,6 +102,7 @@ program
   .option("--base-branch <name>", "Base branch for auto-heal PR (default: current branch)")
   .option("--max-retries <n>", "Maximum CI retry attempts in auto-heal mode", "3")
   .option("--max-log-chars <n>", "Maximum failed-log characters to analyze", "12000")
+  .option("--fast", "Fast mode: shorter timeouts, fewer source fetches, parallel quality checks")
   .option("--out-dir <path>", "Output directory for artifacts", ".copilot-guardian")
   .action(async (opts) => {
     try {
@@ -131,7 +132,8 @@ program
         showOptions: Boolean(opts.showOptions),
         strategy: opts.strategy,
         outDir: opts.outDir,
-        maxLogChars
+        maxLogChars,
+        fast: Boolean(opts.fast)
       });
 
       renderSummary(res.analysis);
@@ -307,6 +309,7 @@ program
   .option("--run-file <path>", "Path to file with run IDs (JSON array or newline/comma text)")
   .option("--failed-limit <n>", "Use N most recent failed runs when IDs are not provided", "5")
   .option("--max-log-chars <n>", "Maximum failed-log characters to analyze", "12000")
+  .option("--fast", "Fast mode for each evaluated run")
   .option("--fail-fast", "Stop harness on first failed case")
   .option("--out-dir <path>", "Output directory for evaluation reports", ".copilot-guardian/eval")
   .action(async (opts) => {
@@ -342,7 +345,8 @@ program
       const report = await runEvaluationHarness(repo, runIds, {
         outDir: String(opts.outDir),
         maxLogChars,
-        failFast: Boolean(opts.failFast)
+        failFast: Boolean(opts.failFast),
+        fast: Boolean(opts.fast)
       });
 
       console.log(chalk.green.bold("[+] Evaluation summary"));
@@ -363,6 +367,7 @@ program
   .requiredOption("-r, --repo <owner/repo>", "Target repository")
   .requiredOption("-i, --run-id <id>", "Run ID")
   .option("--max-log-chars <n>", "Maximum failed-log characters to analyze", "12000")
+  .option("--fast", "Fast mode: shorter model timeout + reduced source fetch")
   .option("--out-dir <path>", "Output directory", ".copilot-guardian")
   .action(async (opts) => {
     try {
@@ -370,7 +375,9 @@ program
       if (!Number.isFinite(maxLogChars) || maxLogChars < 2000) {
         throw new Error("--max-log-chars must be a number >= 2000");
       }
-      await analyzeRun(opts.repo, Number(opts.runId), opts.outDir, maxLogChars);
+      await analyzeRun(opts.repo, Number(opts.runId), opts.outDir, maxLogChars, {
+        fast: Boolean(opts.fast)
+      });
       console.log(chalk.green(`\n[+] Analysis saved to ${opts.outDir}/analysis.json\n`));
     } catch (error: any) {
       console.error(chalk.red('\n[-] Error:'), error.message);

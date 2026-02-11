@@ -11,6 +11,7 @@ export type RunFlags = {
   strategy?: "conservative" | "balanced" | "aggressive";
   outDir?: string;
   maxLogChars?: number;
+  fast?: boolean;
 };
 
 type AbstainDecision = {
@@ -76,7 +77,10 @@ export async function runGuardian(repo: string, runId: number, flags: RunFlags) 
     repo,
     runId,
     outDir,
-    flags.maxLogChars
+    flags.maxLogChars,
+    {
+      fast: Boolean(flags.fast)
+    }
   );
 
   // Default: generate options only if requested (for speed)
@@ -104,7 +108,9 @@ export async function runGuardian(repo: string, runId: number, flags: RunFlags) 
       console.log(chalk.dim(`    Signals: ${abstainReport.signals.join(", ")}`));
       console.log(chalk.dim(`    Saved: ${path.join(outDir, "abstain.report.json")}\n`));
     } else {
-      const { index } = await generatePatchOptions(analysis, outDir);
+      const { index } = await generatePatchOptions(analysis, outDir, {
+        fast: Boolean(flags.fast)
+      });
       patchIndex = index;
       const allNoGo = index?.results?.length > 0 && index.results.every((r: any) => r.verdict === "NO_GO");
       if (allNoGo) {

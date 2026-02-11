@@ -72,6 +72,7 @@ export type EvalReport = {
   options: {
     max_log_chars: number;
     fail_fast: boolean;
+    fast: boolean;
     out_dir: string;
   };
   summary: EvalSummary;
@@ -82,6 +83,7 @@ export type EvalOptions = {
   outDir?: string;
   maxLogChars?: number;
   failFast?: boolean;
+  fast?: boolean;
 };
 
 function riskRank(level: string): number {
@@ -215,6 +217,7 @@ function buildMarkdown(report: EvalReport): string {
   lines.push(`- Repository: \`${report.repo}\``);
   lines.push(`- Run count: ${report.run_ids.length}`);
   lines.push(`- Max log chars: ${report.options.max_log_chars}`);
+  lines.push(`- Fast mode: ${report.options.fast}`);
   lines.push("");
   lines.push("## Summary");
   lines.push("");
@@ -343,6 +346,7 @@ export async function runEvaluationHarness(
   const outDir = options.outDir || path.join(process.cwd(), ".copilot-guardian", "eval");
   const maxLogChars = Number.isFinite(options.maxLogChars) ? Number(options.maxLogChars) : 12000;
   const failFast = Boolean(options.failFast);
+  const fast = Boolean(options.fast);
   ensureDir(outDir);
 
   console.log(chalk.bold.cyan("\n=== Copilot Guardian Evaluation Harness ===\n"));
@@ -363,7 +367,8 @@ export async function runEvaluationHarness(
         showOptions: true,
         showReasoning: false,
         outDir: caseOutDir,
-        maxLogChars
+        maxLogChars,
+        fast
       });
 
       const rows = Array.isArray(result.patchIndex?.results) ? result.patchIndex.results : [];
@@ -520,6 +525,7 @@ export async function runEvaluationHarness(
     options: {
       max_log_chars: maxLogChars,
       fail_fast: failFast,
+      fast,
       out_dir: outDir
     },
     summary,

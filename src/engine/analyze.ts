@@ -223,9 +223,10 @@ function applyStepAwareAdjustments(obj: any, ctx: RunContext): void {
   }
 }
 
-async function copilotChat(input: string): Promise<string> {
+async function copilotChat(input: string, timeout = 120000): Promise<string> {
   return copilotChatAsync(input, {
-    spinnerText: '[>] Asking Copilot for multi-hypothesis analysis...'
+    spinnerText: '[>] Asking Copilot for multi-hypothesis analysis...',
+    timeout
   });
 }
 
@@ -233,8 +234,27 @@ export async function analyzeRun(
   repo: string,
   runId: number,
   outDir = path.join(process.cwd(), ".copilot-guardian"),
-  maxLogChars = 12000
+  maxLogChars = 12000,
+  options: {
+    fast?: boolean;
+    maxSourceFiles?: number;
+    analysisTimeoutMs?: number;
+  } = {}
 ) {
+  const fastMode = Boolean(options.fast);
+  const maxSourceFiles =
+    Number.isFinite(options.maxSourceFiles) && Number(options.maxSourceFiles) > 0
+      ? Number(options.maxSourceFiles)
+      : fastMode
+        ? 3
+        : 8;
+  const analysisTimeoutMs =
+    Number.isFinite(options.analysisTimeoutMs) && Number(options.analysisTimeoutMs) > 0
+      ? Number(options.analysisTimeoutMs)
+      : fastMode
+        ? 90000
+        : 120000;
+
   console.log(chalk.cyan('[>] Starting analysis...'));
   ensureDir(outDir);
   console.log(chalk.dim(`    Output directory: ${outDir}`));
@@ -264,7 +284,8 @@ export async function analyzeRun(
     ctx.logExcerpt,
     repo,
     ctx.headSha || '',
-    ctx.failedTestFiles || []
+    ctx.failedTestFiles || [],
+    maxSourceFiles
   );
   if (sourceContexts.length > 0) {
     console.log(chalk.green(`[+] Found ${sourceContexts.length} source file(s) mentioned in errors`));
@@ -316,7 +337,7 @@ export async function analyzeRun(
   
   console.log(chalk.cyan('[>] Sending to Copilot for multi-hypothesis analysis...'));
   console.log(chalk.dim('    (This may take 30-60 seconds)'));
-  const raw = await copilotChat(fullInput);
+  const raw = await copilotChat(fullInput, analysisTimeoutMs);
   writeText(path.join(outDir, "copilot.analysis.raw.txt"), raw);
   console.log(chalk.green('[+] Received response from Copilot'));
   console.log(chalk.dim(`[>] Saved raw response: copilot.analysis.raw.txt`));

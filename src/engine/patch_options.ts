@@ -34,6 +34,20 @@ export type QualityReview = {
   suggested_adjustments: string[];
 };
 
+export type PatchGenerationOptions = {
+  fast?: boolean;
+  patchRetries?: number;
+  patchTimeoutMs?: number;
+  qualityTimeoutMs?: number;
+  qualityParallel?: number;
+  skipModelQualityOnDeterministicNoGo?: boolean;
+};
+
+type QualityReviewOptions = {
+  timeoutMs?: number;
+  skipModelOnDeterministicNoGo?: boolean;
+};
+
 const RISK_RANK: Record<"low" | "medium" | "high", number> = {
   low: 0,
   medium: 1,
@@ -43,6 +57,12 @@ const RISK_RANK: Record<"low" | "medium" | "high", number> = {
 function clamp01(n: number): number {
   if (!Number.isFinite(n)) return 0;
   return Math.max(0, Math.min(1, n));
+}
+
+function toPositiveInt(value: unknown, fallback: number): number {
+  const n = Number(value);
+  if (!Number.isFinite(n) || n <= 0) return fallback;
+  return Math.floor(n);
 }
 
 function unique(values: string[]): string[] {
@@ -345,11 +365,50 @@ async function copilotChat(input: string, context: string, timeout = 150000): Pr
   });
 }
 
-export async function generatePatchOptions(analysisJson: any, outDir = path.join(process.cwd(), ".copilot-guardian")) {
+async function mapWithConcurrency<T, R>(
+  items: T[],
+  concurrency: number,
+  worker: (item: T, index: number) => Promise<R>
+): Promise<R[]> {
+  const size = Math.max(1, Math.floor(concurrency));
+  const out = new Array<R>(items.length);
+  let cursor = 0;
+
+  const runWorker = async () => {
+    while (true) {
+      const index = cursor++;
+      if (index >= items.length) return;
+      out[index] = await worker(items[index], index);
+    }
+  };
+
+  const workers = Array.from({ length: Math.min(size, items.length) }, () => runWorker());
+  await Promise.all(workers);
+  return out;
+}
+
+export async function generatePatchOptions(
+  analysisJson: any,
+  outDir = path.join(process.cwd(), ".copilot-guardian"),
+  options: PatchGenerationOptions = {}
+) {
+  const fastMode = Boolean(options.fast);
+  const maxPatchRetries = toPositiveInt(options.patchRetries, fastMode ? 2 : 3);
+  const patchTimeoutMs = toPositiveInt(options.patchTimeoutMs, fastMode ? 90000 : 180000);
+  const qualityTimeoutMs = toPositiveInt(options.qualityTimeoutMs, fastMode ? 70000 : 120000);
+  const qualityParallel = toPositiveInt(options.qualityParallel, fastMode ? 3 : 1);
+  const skipModelQualityOnDeterministicNoGo =
+    typeof options.skipModelQualityOnDeterministicNoGo === "boolean"
+      ? options.skipModelQualityOnDeterministicNoGo
+      : fastMode;
+
   console.log(chalk.cyan('\n[>] Generating 3-strategy patch options...'));
   console.log(chalk.dim('    Conservative: Minimal changes, low risk'));
   console.log(chalk.dim('    Balanced: Standard fix, moderate scope'));
   console.log(chalk.dim('    Aggressive: Comprehensive, high risk'));
+  if (fastMode) {
+    console.log(chalk.dim(`    Fast mode: retries=${maxPatchRetries}, patch_timeout=${patchTimeoutMs}ms, quality_timeout=${qualityTimeoutMs}ms, parallel=${qualityParallel}`));
+  }
   ensureDir(outDir);
   
   const prompt = loadText(path.join(PACKAGE_ROOT, "prompts", "patch.options.v1.txt"));
@@ -357,7 +416,6 @@ export async function generatePatchOptions(analysisJson: any, outDir = path.join
   const baseInput = `${prompt}\n\nANALYSIS_JSON:\n${JSON.stringify(analysisJson, null, 2)}`;
   console.log(chalk.cyan('[>] Asking Copilot for patch strategies...'));
 
-  const maxPatchRetries = 3;
   let raw = "";
   let obj: PatchOptions | null = null;
   let lastParseError: Error | null = null;
@@ -371,7 +429,11 @@ export async function generatePatchOptions(analysisJson: any, outDir = path.join
         `No prose. No markdown. No preface. No summary.\n`;
     const attemptInput = baseInput + retryNote;
 
-    raw = await copilotChat(attemptInput, `Generating 3 patch strategies (attempt ${attempt}/${maxPatchRetries})`, 180000);
+    raw = await copilotChat(
+      attemptInput,
+      `Generating 3 patch strategies (attempt ${attempt}/${maxPatchRetries})`,
+      patchTimeoutMs
+    );
     writeText(path.join(outDir, `copilot.patch.options.raw.attempt${attempt}.txt`), raw);
     writeText(path.join(outDir, "copilot.patch.options.raw.txt"), raw);
 
@@ -409,16 +471,25 @@ export async function generatePatchOptions(analysisJson: any, outDir = path.join
 
   // Write patch files
   console.log(chalk.cyan('[>] Running quality reviews on each strategy...'));
-  const results: any[] = [];
-  for (const strat of obj.strategies) {
-    const affectedFiles = extractFilesFromDiff(strat.diff);
+  const strategies = Array.isArray(obj.strategies) ? obj.strategies : [];
+  for (const strat of strategies) {
     const patchPath = path.join(outDir, `fix.${strat.id}.patch`);
     writeText(patchPath, strat.diff.trim() + "\n");
     console.log(chalk.dim(`[>] Saved patch: fix.${strat.id}.patch`));
+  }
 
+  const results = await mapWithConcurrency(strategies, qualityParallel, async (strat) => {
+    const affectedFiles = extractFilesFromDiff(strat.diff);
+    const patchPath = path.join(outDir, `fix.${strat.id}.patch`);
     console.log(chalk.dim(`[>] Quality checking ${strat.id} strategy...`));
-    const quality = await qualityReview(analysisJson, strat, affectedFiles, outDir);
-    results.push({
+    const quality = await qualityReview(analysisJson, strat, affectedFiles, outDir, {
+      timeoutMs: qualityTimeoutMs,
+      skipModelOnDeterministicNoGo: skipModelQualityOnDeterministicNoGo
+    });
+    const verdictColor = quality.verdict === "GO" ? chalk.green : chalk.red;
+    const slopScore = quality.slop_score !== undefined ? quality.slop_score.toFixed(2) : "0.00";
+    console.log(chalk.dim(`    ${strat.label.padEnd(15)}`), verdictColor(quality.verdict), chalk.dim(`slop=${slopScore}`));
+    return {
       label: strat.label,
       id: strat.id,
       risk_level: quality.risk_level,
@@ -427,12 +498,8 @@ export async function generatePatchOptions(analysisJson: any, outDir = path.join
       patchPath,
       files: affectedFiles,
       summary: strat.summary
-    });
-    
-    const verdictColor = quality.verdict === 'GO' ? chalk.green : chalk.red;
-    const slopScore = quality.slop_score !== undefined ? quality.slop_score.toFixed(2) : '0.00';
-    console.log(chalk.dim(`    ${strat.label.padEnd(15)}`), verdictColor(quality.verdict), chalk.dim(`slop=${slopScore}`));
-  }
+    };
+  });
 
   const index = { timestamp: new Date().toISOString(), results };
   writeJson(path.join(outDir, "patch_options.json"), index);
@@ -450,9 +517,28 @@ async function qualityReview(
   analysisJson: any,
   strat: PatchStrategy,
   affectedFiles: string[],
-  outDir: string
+  outDir: string,
+  options: QualityReviewOptions = {}
 ): Promise<QualityReview> {
+  const timeoutMs = toPositiveInt(options.timeoutMs, 120000);
+  const skipModelOnDeterministicNoGo = Boolean(options.skipModelOnDeterministicNoGo);
   const deterministic = deterministicQualityReview(analysisJson, strat, affectedFiles);
+  const rawPath = path.join(outDir, `copilot.quality.${strat.id}.raw.txt`);
+  const reviewPath = path.join(outDir, `quality_review.${strat.id}.json`);
+
+  if (skipModelOnDeterministicNoGo && deterministic.verdict === "NO_GO") {
+    const skipped: QualityReview = {
+      ...deterministic,
+      reasons: unique([
+        "Model quality review skipped because deterministic guard already returned NO_GO.",
+        ...deterministic.reasons
+      ])
+    };
+    writeText(rawPath, "[SKIPPED] Model quality review was skipped due to deterministic NO_GO.\n");
+    writeJson(reviewPath, skipped);
+    return skipped;
+  }
+
   const prompt = loadText(path.join(PACKAGE_ROOT, "prompts", "quality.v1.txt"));
   const input = `${prompt}\n\nINPUT:\n${JSON.stringify({
     intent: analysisJson?.patch_plan?.intent,
@@ -461,8 +547,8 @@ async function qualityReview(
     diff: strat.diff
   }, null, 2)}`;
 
-  const raw = await copilotChat(input, `Quality review: ${strat.id}`, 120000);
-  writeText(path.join(outDir, `copilot.quality.${strat.id}.raw.txt`), raw);
+  const raw = await copilotChat(input, `Quality review: ${strat.id}`, timeoutMs);
+  writeText(rawPath, raw);
 
   // S2 FIX: Add try-catch for JSON parsing
   let obj: any;
@@ -480,7 +566,9 @@ async function qualityReview(
         "Inspect copilot.quality.*.raw.txt for malformed output"
       ]
     };
-    return mergeQualityReview(parseFallback, deterministic);
+    const merged = mergeQualityReview(parseFallback, deterministic);
+    writeJson(reviewPath, merged);
+    return merged;
   }
   
   let schemaInvalid = false;
@@ -511,6 +599,6 @@ async function qualityReview(
   }
 
   const merged = mergeQualityReview(normalized, deterministic);
-  writeJson(path.join(outDir, `quality_review.${strat.id}.json`), merged);
+  writeJson(reviewPath, merged);
   return merged;
 }

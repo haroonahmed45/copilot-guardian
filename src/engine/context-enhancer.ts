@@ -95,7 +95,8 @@ export async function enhanceContextWithSources(
   logExcerpt: string,
   repo: string,
   headSha?: string,
-  preferredFiles: string[] = []
+  preferredFiles: string[] = [],
+  maxFiles = 8
 ): Promise<SourceContext[]> {
   if (!headSha) {
     console.log(chalk.yellow('[!] No commit SHA, skipping source enhancement'));
@@ -116,7 +117,7 @@ export async function enhanceContextWithSources(
       seen.add(file);
       return true;
     })
-    .slice(0, 8);
+    .slice(0, Math.max(1, maxFiles));
   
   if (filePaths.length === 0) {
     console.log(chalk.dim('[~] No source files detected in logs'));

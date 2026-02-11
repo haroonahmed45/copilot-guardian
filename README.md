@@ -8,8 +8,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 [![CI](https://github.com/flamehaven01/copilot-guardian/actions/workflows/ci.yml/badge.svg)](https://github.com/flamehaven01/copilot-guardian/actions/workflows/ci.yml)
-[![Version: 0.2.4](https://img.shields.io/badge/version-0.2.4-blue.svg?style=flat-square)](https://github.com/flamehaven01/copilot-guardian/releases)
-[![Release: v0.2.4](https://img.shields.io/badge/release-v0.2.4-0A66C2.svg?style=flat-square)](https://github.com/flamehaven01/copilot-guardian/releases/tag/v0.2.4)
+[![Version: 0.2.5](https://img.shields.io/badge/version-0.2.5-blue.svg?style=flat-square)](https://github.com/flamehaven01/copilot-guardian/releases)
+[![Release: v0.2.5](https://img.shields.io/badge/release-v0.2.5-0A66C2.svg?style=flat-square)](https://github.com/flamehaven01/copilot-guardian/releases/tag/v0.2.5)
 [![Sovereign AI](https://img.shields.io/badge/Sovereign-AI-8A2BE2.svg?style=flat-square&logo=githubactions&logoColor=white)](https://dev.to/flamehaven)
 [![Anti-Slop Certified](https://img.shields.io/badge/Anti--Slop-Certified-00C853.svg?style=flat-square)](https://github.com/flamehaven01/copilot-guardian)
 [![Copilot CLI Challenge](https://img.shields.io/badge/GitHub-Copilot_Challenge-181717.svg?style=flat-square&logo=github&logoColor=white)](https://dev.to/challenges/github-2026-01-21)
@@ -19,7 +19,7 @@
 
 **Multi-Hypothesis CI Debugger • Risk-Aware Patching • Complete Transparency • Step-Aware Recovery**
 
-[Submission v0.2.4](#submission-edition-v024-reliability--abstain-clarity) • [Why Challenge](#why-this-is-a-copilot-cli-challenge-submission) • [Judge Quick Test (90 seconds)](#judge-quick-test-90-seconds) • [Single Test Mode](#single-test-mode-clean-run-for-gif--review) • [Evaluation Harness](#evaluation-harness-real-world-patchability-diagnosis) • [Forced Abstain Policy](#forced-abstain-policy-not-patchable) • [Copilot Showcase](#copilot-challenge-showcase-five-advanced-usage-patterns) • [Installation](#quick-start) • [Architecture](docs/ARCHITECTURE.md)
+[Submission v0.2.5](#submission-edition-v025-speed--stability) • [Why Challenge](#why-this-is-a-copilot-cli-challenge-submission) • [Judge Quick Test (90 seconds)](#judge-quick-test-90-seconds) • [Single Test Mode](#single-test-mode-clean-run-for-gif--review) • [Evaluation Harness](#evaluation-harness-real-world-patchability-diagnosis) • [Forced Abstain Policy](#forced-abstain-policy-not-patchable) • [Copilot Showcase](#copilot-challenge-showcase-five-advanced-usage-patterns) • [Installation](#quick-start) • [Architecture](docs/ARCHITECTURE.md)
 
 </div>
 
@@ -50,8 +50,9 @@ Run one command:
 copilot-guardian run \
   --repo flamehaven01/copilot-guardian \
   --last-failed \
-  --show-reasoning \
-  --show-options
+  --show-options \
+  --fast \
+  --max-log-chars 20000
 ```
 
 Expected observations:
@@ -60,6 +61,12 @@ Expected observations:
 2. Patch spectrum across conservative/balanced/aggressive
 3. Deterministic anti-slop gate rejecting risky bypass patterns
 4. Full artifacts persisted to `.copilot-guardian/` for auditability
+
+For extended trace mode (slower, not the default GIF path), add:
+
+```bash
+--show-reasoning
+```
 
 ## Single Test Mode (Clean Run for GIF + Review)
 
@@ -72,8 +79,8 @@ Remove-Item .\.copilot-guardian\* -Recurse -Force -ErrorAction SilentlyContinue
 # 2) Run a single local test scenario (intentional mixed-quality patch cases)
 npm test -- tests/quality_guard_regression_matrix.test.ts --runInBand
 
-# 3) Run Guardian analysis for challenge flow
-node dist\cli.js run --repo flamehaven01/copilot-guardian --last-failed --show-options
+# 3) Run Guardian analysis for challenge flow (stable demo profile)
+node dist\cli.js run --repo flamehaven01/copilot-guardian --last-failed --show-options --fast --max-log-chars 20000
 ```
 
 Primary test file:
@@ -161,7 +168,7 @@ Add your final recording file at `docs/screenshots/final-demo.gif`:
 
 ---
 
-## Submission Edition v0.2.4: Reliability + Abstain Clarity
+## Submission Edition v0.2.5: Speed + Stability
 
 This release upgrades Guardian from static patch generation to an **independent, step-aware recovery system** designed for real CI failures.
 
@@ -207,14 +214,15 @@ This release upgrades Guardian from static patch generation to an **independent,
   - When all patch strategies are `NO_GO`, Guardian recommends re-run with larger log window.
   - New CLI option: `--max-log-chars`.
 
-### Fast verification (v0.2.4 path)
+### Fast verification (v0.2.5 path)
 
 ```bash
 copilot-guardian run \
   --repo owner/repo \
   --last-failed \
   --show-options \
-  --max-log-chars 50000
+  --fast \
+  --max-log-chars 20000
 ```
 
 Expected output highlights:
@@ -222,6 +230,17 @@ Expected output highlights:
 - `failed_test_files` and `assertion_signals` are saved in `.copilot-guardian/input.context.json`
 - `patch_plan.allowed_files` is dynamically expanded in `.copilot-guardian/analysis.json`
 - If all options are rejected, Guardian suggests a larger `--max-log-chars` re-run
+
+### Immediate speed tuning (no code changes)
+
+```powershell
+$env:COPILOT_TIMEOUT_MS=90000
+node dist\cli.js run --repo flamehaven01/copilot-guardian --last-failed --show-options --fast --max-log-chars 20000
+```
+
+Notes:
+- Omit `--show-reasoning` for stable demo speed.
+- Keep `--max-log-chars` small first (e.g., `12000`-`20000`) and only increase when diagnosis needs more evidence.
 
 ---
 
