@@ -10,7 +10,7 @@ Deterministic safety layer for Copilot-driven CI healing.
 [![CI](https://github.com/flamehaven01/copilot-guardian/actions/workflows/ci.yml/badge.svg)](https://github.com/flamehaven01/copilot-guardian/actions/workflows/ci.yml)
 [![Version: 0.2.6](https://img.shields.io/badge/version-0.2.6-blue.svg?style=flat-square)](https://github.com/flamehaven01/copilot-guardian/releases)
 [![Release: v0.2.6](https://img.shields.io/badge/release-v0.2.6-0A66C2.svg?style=flat-square)](https://github.com/flamehaven01/copilot-guardian/releases/tag/v0.2.6)
-[![npm version](https://img.shields.io/npm/v/copilot-guardian?style=flat-square&logo=npm&color=CB3837)](https://www.npmjs.com/package/copilot-guardian)
+[![npm version](https://img.shields.io/npm/v/copilot-guardian?style=flat-square&logo=npm&color=CB3837)](https://www.npmjs.com/package/copilot-guardian)<br/>
 [![Copilot CLI Challenge](https://img.shields.io/badge/GitHub-Copilot_Challenge-181717.svg?style=flat-square&logo=github&logoColor=white)](https://dev.to/challenges/github-2026-01-21)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178C6.svg?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![MCP](https://img.shields.io/badge/MCP-Enabled-FF5722.svg?style=flat-square)](https://modelcontextprotocol.io/)
