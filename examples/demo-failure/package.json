@@ -1,0 +1,9 @@
+{
+  "name": "copilot-guardian-demo",
+  "version": "0.0.1",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "test": "node ./test/require-api-url.js"
+  }
+}
