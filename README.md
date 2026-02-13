@@ -192,7 +192,7 @@ Artifacts are generated under `.copilot-guardian/`:
 ## Documentation Links
 
 - Architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- Demo walkthrough: [examples/demo-failure/README.md](examples/demo-failure/README.md)
+- Demo walkthrough: [examples/demo-failure/README.md](https://github.com/flamehaven01/copilot-guardian/blob/main/examples/demo-failure/README.md)
 - Changelog: [CHANGELOG.md](CHANGELOG.md)
 - Security: [SECURITY.md](SECURITY.md)
 - Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)
