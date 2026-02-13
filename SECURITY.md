@@ -18,14 +18,15 @@ All logs and context sent to AI models are automatically sanitized:
 - Passwords in error messages
 
 ### 2. Local-First Processing
-- All analysis happens locally via GitHub Copilot CLI
-- No data is sent to external servers (except GitHub's Copilot API via authenticated CLI)
+- Log collection, redaction, and artifact persistence happen locally.
+- Copilot requests are sent to GitHub Copilot via authenticated GitHub sessions, using `@github/copilot-sdk` by default.
+- Optional `gh copilot` CLI flows are supported for terminal-first reproducible runs.
 - Full audit trail maintained in `.copilot-guardian/` directory
 
 ### 3. Transparency
 - All raw inputs and outputs are saved (`.raw.txt` files)
 - Users can inspect exactly what data was sent to AI models
-- No hidden telemetry or data collection
+- No hidden third-party telemetry or data collection
 
 ## Reporting a Vulnerability
 
@@ -123,7 +124,7 @@ This enables:
 
 ### GDPR
 - All processing is local
-- No data transfer to third parties (except GitHub Copilot API via user's authenticated session)
+- No data transfer to third parties (except GitHub Copilot API via the user's authenticated SDK/CLI session)
 - User has full control and right to erasure
 
 ### Enterprise Use
@@ -146,5 +147,5 @@ gh repo subscribe flamehaven01/copilot-guardian --alerts
 
 ---
 
-**Last Updated**: 2026-02-12
-**Security Policy Version**: 0.2.5
+**Last Updated**: 2026-02-13
+**Security Policy Version**: 0.2.6

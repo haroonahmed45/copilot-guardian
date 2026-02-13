@@ -15,7 +15,7 @@ Deterministic safety layer for Copilot-driven CI healing.
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178C6.svg?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![MCP](https://img.shields.io/badge/MCP-Enabled-FF5722.svg?style=flat-square)](https://modelcontextprotocol.io/)
 
-[Why Challenge](#why-this-is-a-copilot-cli-challenge-submission) • [Judge Quick Test](#judge-quick-test-90-seconds) • [Final GIF](#final-gif-slot-submission-finalization) • [Quick Start](#quick-start) • [How It Works](#how-it-works) • [Docs](#documentation-links)
+[Why Challenge](#why-this-is-a-copilot-cli-challenge-submission) • [Judge Quick Test](#judge-quick-test-90-seconds) • [Demo GIF](#demo-gif) • [Quick Start](#quick-start) • [How It Works](#how-it-works) • [Docs](#documentation-links)
 
 </div>
 
@@ -32,15 +32,20 @@ This project demonstrates five advanced Copilot usage patterns under real CI fai
 5. Transparent artifact trail (`analysis.json`, raw responses, patch index)
 
 Runtime clarification:
-- Production path uses `@github/copilot-sdk`
-- CLI fallback is for local experimentation only
+- Copilot Guardian is a terminal CLI tool.
+- Copilot requests use `@github/copilot-sdk` as the default path.
+- `gh copilot` is available as an optional terminal fallback for reproducible local runs.
 
 ---
 
 ## Judge Quick Test (90 seconds)
 
+Prerequisites:
+- `gh auth status` succeeds
+- GitHub Copilot is enabled for your account/session
+
 ```bash
-copilot-guardian run \
+npx copilot-guardian@latest run \
   --repo flamehaven01/copilot-guardian \
   --last-failed \
   --show-options \
@@ -57,7 +62,7 @@ For extended trace mode (slower), add `--show-reasoning`.
 
 ---
 
-## Final GIF Slot (Submission Finalization)
+## Demo (GIF)
 
 Final demo artifact:
 
@@ -192,7 +197,7 @@ Artifacts are generated under `.copilot-guardian/`:
 ## Documentation Links
 
 - Architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- Demo walkthrough: [examples/demo-failure/README.md](https://github.com/flamehaven01/copilot-guardian/blob/main/examples/demo-failure/README.md)
+- Demo walkthrough: [examples/demo-failure/README.md](examples/demo-failure/README.md)
 - Changelog: [CHANGELOG.md](CHANGELOG.md)
 - Security: [SECURITY.md](SECURITY.md)
 - Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)
