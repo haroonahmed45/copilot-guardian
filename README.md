@@ -213,7 +213,7 @@ Conservative strategy was automatically rejected due to malformed Copilot JSON:
 ```
 
 Source:
-- `examples/real-output/standard/quality_review.conservative.json`
+- [examples/real-output/standard/quality_review.conservative.json](examples/real-output/standard/quality_review.conservative.json)
 
 ### Patch Quality Spectrum
 
@@ -224,12 +224,12 @@ Source:
 | Aggressive | `tests/quality_guard_regression_matrix.test.ts` | low | GO | 0.08 |
 
 Source:
-- `examples/real-output/standard/patch_options.json`
+- [examples/real-output/standard/patch_options.json](examples/real-output/standard/patch_options.json)
 
 ### Generated Artifact Sets
 
-- Standard run outputs: `examples/real-output/standard/`
-- Abstain-run evidence: `examples/real-output/abstain/guardian.report.json`
+- Standard run outputs: [examples/real-output/standard/](examples/real-output/standard/)
+- Abstain-run evidence: [examples/real-output/abstain/guardian.report.json](examples/real-output/abstain/guardian.report.json)
 
 Key insight:
 - Guardian does not trust model output blindly.
